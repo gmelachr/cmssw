@@ -608,6 +608,8 @@ for e_n,era in enumerate(era_mask_2024):
 ## special HLT scouting workflow (with hardcoded private input file from ScoutingPFMonitor skimmed to remove all events without scouting)
 workflows[145.415] = ['',['HLTDR3_ScoutingPFMonitor_2024','RECONANORUN3_ScoutingPFMonitor_reHLT_2024','HARVESTRUN3_ScoutingPFMonitor_2024']]
 
+## special HLT scouting workflow (with hardcoded private input file from ScoutingPFMonitor skimmed to remove all events without scouting)
+workflows[145.415] = ['',['HLTDR3_ScoutingPFMonitor_2024','RECONANORUN3_ScoutingPFMonitor_reHLT_2024','HARVESTRUN3_ScoutingPFMonitor_2024']]
 ##################################################################
 ### run3 (2024) skims - Era F ###
 workflows[146.101] = ['',['RunZeroBias2024F','HLTDR3_2024','SKIMZEROBIASRUN3_reHLT_2024','HARVESTRUN3_ZB_2024']]

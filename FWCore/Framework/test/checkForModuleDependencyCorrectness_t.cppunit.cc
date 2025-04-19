@@ -26,15 +26,6 @@
 
 #include "makeDummyProcessConfiguration.h"
 
-namespace edm {
-  class ESProducer;
-
-  namespace eventsetup {
-    struct ComponentDescription;
-    class ESProductResolverProvider;
-  }  // namespace eventsetup
-}  // namespace edm
-
 using ModuleDependsOnMap = std::map<std::string, std::vector<std::string>>;
 using PathToModules = std::unordered_map<std::string, std::vector<std::string>>;
 

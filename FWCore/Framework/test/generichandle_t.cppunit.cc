@@ -166,7 +166,7 @@ void testGenericHandle::getbyLabelTest() {
   edm::Timestamp fakeTime;
   std::string uuid = edm::createGlobalIdentifier();
   auto pc = edmtest::makeDummyProcessConfiguration("PROD", dummyProcessPset.id());
-  std::shared_ptr<edm::ProductRegistry const> pregc(std::make_shared<edm::ProductRegistry>(preg->moveTo()));
+  std::shared_ptr<edm::ProductRegistry const> pregc(preg.release());
   auto rp =
       std::make_shared<edm::RunPrincipal>(pregc, edm::productResolversFactory::makePrimary, pc, &historyAppender_, 0);
   rp->setAux(edm::RunAuxiliary(col.run(), fakeTime, fakeTime));

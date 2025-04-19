@@ -712,7 +712,11 @@ class ConfigBuilder(object):
                 miniAOD_customizeOutput(output)
 
             outputModuleName=streamType+streamQualifier+'output'
-            outputModule = self._addOutputModuleAndPathToProcess(output, outputModuleName)
+            setattr(self.process,outputModuleName,output)
+            outputModule=getattr(self.process,outputModuleName)
+            setattr(self.process,outputModuleName+'_step',cms.EndPath(outputModule))
+            path=getattr(self.process,outputModuleName+'_step')
+            self.schedule.append(path)
 
             if self._options.outputCommands and streamType!='DQM':
                 for evct in self._options.outputCommands.split(','):

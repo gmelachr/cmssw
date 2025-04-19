@@ -82,10 +82,11 @@ namespace edm {
         fixed_(type_ == "fixed"),
         none_(type_ == "none"),
         fileNameHash_(0U),
-        productRegistry_(),
-        input_(VectorInputSourceFactory::get()->makeVectorInputSource(
-            pset,
-            VectorInputSourceDescription(std::make_shared<edm::ProductRegistry>(), edm::PreallocationConfiguration()))),
+        productRegistry_(new SignallingProductRegistry),
+        input_(VectorInputSourceFactory::get()
+                   ->makeVectorInputSource(
+                       pset, VectorInputSourceDescription(productRegistry_, edm::PreallocationConfiguration()))
+                   .release()),
         // hardware information is not needed for the "overlay"
         processConfiguration_(std::make_shared<ProcessConfiguration>(
             "@MIXING", getReleaseVersion(), edm::HardwareResourcesDescription())),

@@ -54,7 +54,7 @@ def customizeHLTfor47630(process):
             for attr in attributes_to_remove:
                 if hasattr(pset, attr):
                     delattr(mod.DBParameters, attr)
-
+                    
     return process
 
 # CMSSW version specific customizations
@@ -64,6 +64,7 @@ def customizeHLTforCMSSW(process, menuType="GRun"):
 
     # add call to action function in proper order: newest last!
     # process = customiseFor12718(process)
+    
     process = customizeHLTfor47630(process)
     
     return process

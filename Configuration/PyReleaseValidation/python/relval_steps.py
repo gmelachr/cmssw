@@ -3274,10 +3274,6 @@ steps['RECOHIRUN3_reHLT_2023']=merge([{'-s':'RAW2DIGI,L1Reco,RECO,PAT,DQM:@stand
 
 steps['RECONANORUN3_reHLT_2024']=merge([{'-s':'RAW2DIGI,L1Reco,RECO,PAT,NANO,DQM:@standardDQM+@miniAODDQM+@nanoAODDQM','--datatier':'RECO,MINIAOD,NANOAOD,DQMIO','--eventcontent':'RECO,MINIAOD,NANOEDMAOD,DQM'},steps['RECODR3_reHLT_2024']])
 steps['RECONANORUN3_ZB_reHLT_2024']=merge([{'-s':'RAW2DIGI,L1Reco,RECO,PAT,NANO,DQM:@rerecoZeroBias+@miniAODDQM+@nanoAODDQM'},steps['RECONANORUN3_reHLT_2024']])
-
-steps['RECONANORUN3_reHLT_2024_Offline']=merge([{'-s':'RAW2DIGI,L1Reco,RECO,PAT,NANO,DQM:@standardDQM+@miniAODDQM+@nanoAODDQM','--datatier':'RECO,MINIAOD,NANOAOD,DQMIO','--eventcontent':'RECO,MINIAOD,NANOEDMAOD,DQM'},steps['RECODR3_reHLT_2024_Offline']])
-steps['RECONANORUN3_ZB_reHLT_2024_Offline']=merge([{'-s':'RAW2DIGI,L1Reco,RECO,PAT,NANO,DQM:@rerecoZeroBias+@miniAODDQM+@nanoAODDQM'},steps['RECONANORUN3_reHLT_2024_Offline']])
-
 steps['RECONANORUN3_ScoutingPFMonitor_reHLT_2024']=merge([{'-s':'RAW2DIGI,L1Reco,RECO,PAT,NANO,DQM:@standardDQM+@miniAODDQM+@nanoAODDQM+@hltScouting'},steps['RECONANORUN3_reHLT_2024']])
 
 steps['AODNANORUN3_reHLT_2024']=merge([{'-s':'RAW2DIGI,L1Reco,RECO,PAT,NANO,DQM:@standardDQM+@miniAODDQM+@nanoAODDQM','--datatier':'AOD,MINIAOD,NANOAOD,DQMIO','--eventcontent':'AOD,MINIAOD,NANOEDMAOD,DQM'},steps['RECODR3_reHLT_2024']])
