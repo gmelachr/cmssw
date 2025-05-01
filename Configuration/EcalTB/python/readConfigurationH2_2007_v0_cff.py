@@ -3,6 +3,7 @@ import FWCore.ParameterSet.Config as cms
 from CondCore.DBCommon.CondDBSetup_cfi import *
 ecalConditions = cms.ESSource("PoolDBESSource",
     CondDBSetup,
+    timetype = cms.string('runnumber'),
     toGet = cms.VPSet(cms.PSet(
         record = cms.string('EcalPedestalsRcd'),
         tag = cms.string('EcalPedestals_online')
@@ -17,6 +18,7 @@ ecalConditions = cms.ESSource("PoolDBESSource",
         )),
     connect = cms.string('frontier://Frontier/CMS_ECALHCAL_H2_COND_2007'), ##Frontier/CMS_ECALHCAL_H2_COND_2007"
 
+    siteLocalConfig = cms.untracked.bool(True)
 )
 
 h2007Trivial = cms.ESSource("EcalTrivialConditionRetriever",

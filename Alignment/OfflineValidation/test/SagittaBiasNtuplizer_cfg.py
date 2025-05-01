@@ -13,7 +13,7 @@ options.register('scenario',
                  "Name of input misalignment scenario")
 
 options.register('globalTag',
-                 "125X_mcRun3_2022_design_v6", # default value
+                 "'auto:phase1_2022_realistic", # default value
                  VarParsing.multiplicity.singleton, # singleton or list
                  VarParsing.varType.string, # string, int, or float
                  "name of the input Global Tag")
@@ -23,12 +23,6 @@ options.register ('myfile',
                   VarParsing.multiplicity.singleton,
                   VarParsing.varType.string,
                   "file name")
-
-options.register ('fromRECO',
-                  True, # default value
-                  VarParsing.multiplicity.singleton,
-                  VarParsing.varType.bool,
-                  "start from RECO data-tier, if False it will use TkAlDiMuonAndVertex ALCARECO")
 
 options.register ('FileList',
                   '', # default value
@@ -99,7 +93,7 @@ process.load('TrackingTools.TrackAssociator.DetIdAssociatorESProducer_cff')
 ####################################################################
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 from Configuration.AlCa.GlobalTag import GlobalTag
-process.GlobalTag = GlobalTag(process.GlobalTag, options.globalTag, '')
+process.GlobalTag = GlobalTag(process.GlobalTag,"125X_mcRun3_2022_design_v6", '')
 if (options.scenario=='null'):
     print("null scenario, do nothing")
     pass
@@ -185,33 +179,28 @@ process.refittedTracks = RecoTracker.TrackProducer.TrackRefitter_cfi.TrackRefitt
 ####################################################################
 from RecoVertex.PrimaryVertexProducer.OfflinePrimaryVertices_cfi import offlinePrimaryVertices
 process.offlinePrimaryVerticesFromRefittedTrks = offlinePrimaryVertices.clone()
-process.offlinePrimaryVerticesFromRefittedTrks.TrackLabel = "refittedTracks" if options.fromRECO else "refittedVtxTracks"
+#process.offlinePrimaryVerticesFromRefittedTrks.TrackLabel = cms.InputTag("refittedVtxTracks")
+process.offlinePrimaryVerticesFromRefittedTrks.TrackLabel = cms.InputTag("refittedTracks")
 
 ###################################################################
 # The analysis modules
 ###################################################################
 process.ZtoMMNtuple = cms.EDAnalyzer("SagittaBiasNtuplizer",
-                                     useReco = cms.bool(options.fromRECO),
+                                     #tracks = cms.InputTag('refittedMuons'),
+                                     useReco = cms.bool(True),
+                                     muons = cms.InputTag('muons'),
                                      doGen = cms.bool(True),
-                                     vertices = cms.InputTag('offlinePrimaryVerticesFromRefittedTrks'),
-                                     **({
-                                         "muons": cms.InputTag('muons'),
-                                         "tracks": cms.InputTag('refittedTracks')
-                                     } if options.fromRECO else {
-                                         "muonTracks": cms.InputTag('refittedMuons'),
-                                         "genParticles": cms.InputTag('TkAlDiMuonAndVertexGenMuonSelector')
-                                     }))
+                                     tracks = cms.InputTag('refittedTracks'),
+                                     vertices = cms.InputTag('offlinePrimaryVerticesFromRefittedTrks'))
 
 process.DiMuonVertexValidation = cms.EDAnalyzer("DiMuonVertexValidation",
-                                                useReco = cms.bool(options.fromRECO),
-                                                vertices = cms.InputTag('offlinePrimaryVerticesFromRefittedTrks'),
-                                                **({
-                                                    "muons": cms.InputTag('muons'),
-                                                    "tracks" : cms.InputTag("generalTracks")
-                                                } if options.fromRECO else {
-                                                    "muonTracks": cms.InputTag('refittedMuons'),
-                                                    "tracks": cms.InputTag('')
-                                                }))
+                                                useReco = cms.bool(False),
+                                                ## the two parameters below are mutually exclusive,
+                                                ## depending if RECO or ALCARECO is used
+                                                #muons  = cms.InputTag(''),
+                                                muonTracks = cms.InputTag('refittedMuons'),
+                                                tracks = cms.InputTag(''),
+                                                vertices = cms.InputTag('offlinePrimaryVerticesFromRefittedTrks'))
                                     
 from Alignment.OfflineValidation.diMuonValidation_cfi import diMuonValidation as _diMuonValidation
 process.DiMuonMassValidation = _diMuonValidation.clone(
@@ -267,11 +256,11 @@ process.TFileService = cms.Service("TFileService",
 ###################################################################
 # Path
 ###################################################################
-process.p1 = cms.Path(
-    process.offlineBeamSpot *
-    (process.refittedTracks if options.fromRECO else process.refittedMuons * process.refittedVtxTracks) *
-    process.offlinePrimaryVerticesFromRefittedTrks *
-    process.ZtoMMNtuple *
-    process.DiMuonVertexValidation *
-    (process.DiMuonMassValidation if not options.fromRECO else cms.Sequence())
-)
+process.p1 = cms.Path(process.offlineBeamSpot
+                      #* process.refittedMuons
+                      #* process.refittedVtxTracks
+                      * process.refittedTracks
+                      * process.offlinePrimaryVerticesFromRefittedTrks
+                      * process.ZtoMMNtuple) 
+                      #* process.DiMuonVertexValidation
+                      #* process.DiMuonMassValidation)

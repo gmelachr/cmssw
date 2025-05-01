@@ -484,7 +484,7 @@ nnPuppiTauTable = cms.EDProducer(
 
 hpsTauTable = cms.EDProducer(
     "SimpleTriggerL1HPSPFTauFlatTableProducer",
-    src = cms.InputTag("l1tHPSPFTauProducerPuppi",""),
+    src = cms.InputTag("l1tHPSPFTauProducerPF",""),
     cut = cms.string(""),
     name = cms.string("L1hpsTau"),
     doc = cms.string("HPS Taus"),

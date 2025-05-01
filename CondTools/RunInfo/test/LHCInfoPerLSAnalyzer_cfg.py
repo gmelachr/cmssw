@@ -26,7 +26,7 @@ process.CondDB.connect = 'sqlite_file:LHCInfoPerLS.sqlite' # SQLite input
 
 process.PoolDBESSource = cms.ESSource('PoolDBESSource',
     process.CondDB,
-    DumpStat = cms.untracked.bool(True),
+    DumpStats = cms.untracked.bool(True),
     toGet = cms.VPSet(
         cms.PSet(
             record = cms.string('LHCInfoPerLSRcd'),

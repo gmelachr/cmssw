@@ -98,10 +98,17 @@ namespace cond {
     // value semantics. to be used WITHIN the parent session transaction ( therefore the session should be kept alive ).
     class IOVProxy {
     public:
-      IOVProxy() = default;
+      //
+      IOVProxy();
 
       // the only way to construct it from scratch...
       explicit IOVProxy(const std::shared_ptr<SessionImpl>& session);
+
+      //
+      IOVProxy(const IOVProxy& rhs);
+
+      //
+      IOVProxy& operator=(const IOVProxy& rhs);
 
       IOVArray selectAll();
       IOVArray selectAll(const boost::posix_time::ptime& snapshottime);
@@ -153,8 +160,6 @@ namespace cond {
       // maybe will be removed with a re-design of the top level interface (ESSources )
       const std::shared_ptr<SessionImpl>& session() const;
 
-      void setPrintDebug(bool printDebug) { m_printDebug = printDebug; }
-
     private:
       void checkTransaction(const std::string& ctx) const;
       void resetIOVCache();
@@ -164,9 +169,6 @@ namespace cond {
     private:
       std::shared_ptr<IOVProxyData> m_data;
       std::shared_ptr<SessionImpl> m_session;
-
-      // whether additional debug info should be printed in fetchSequence
-      bool m_printDebug = false;
     };
 
   }  // namespace persistency

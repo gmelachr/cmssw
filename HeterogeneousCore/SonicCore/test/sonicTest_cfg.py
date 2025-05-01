@@ -1,11 +1,13 @@
 import FWCore.ParameterSet.Config as cms
-from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
+from FWCore.ParameterSet.VarParsing import VarParsing
+
+options = VarParsing()
+options.register("moduleType","", VarParsing.multiplicity.singleton, VarParsing.varType.string)
+options.parseArguments()
 
 _allowedModuleTypes = ["Producer","Filter"]
-parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
-parser.add_argument("--moduleType", type=str, required=True, choices=_allowedModuleTypes, help="Type of module to test")
-options = parser.parse_args()
-
+if options.moduleType not in ["Producer","Filter"]:
+    raise ValueError("Unknown module type: {} (allowed: {})".format(options.moduleType,_allowedModuleTypes))
 _moduleName = "SonicDummy"+options.moduleType
 _moduleClass = getattr(cms,"ED"+options.moduleType)
 

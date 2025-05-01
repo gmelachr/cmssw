@@ -36,9 +36,7 @@ class CustomUIsession;
 
 class RunAction;
 class EventAction;
-class Phase2EventAction;
 class TrackingAction;
-class Phase2TrackingAction;
 class SteppingAction;
 class Phase2SteppingAction;
 class CMSSteppingVerbose;
@@ -67,9 +65,7 @@ public:
 
   void Connect(RunAction*);
   void Connect(EventAction*);
-  void Connect(Phase2EventAction*);
   void Connect(TrackingAction*);
-  void Connect(Phase2TrackingAction*);
   void Connect(SteppingAction*);
   void Connect(Phase2SteppingAction*);
 

@@ -1,5 +1,4 @@
 <library file="*.cc" name="SimMuonDTDigitizerPlugins">
-  <use name="FWCore/AbstractServices"/>
   <use name="FWCore/Utilities"/>
   <use name="FWCore/Framework"/>
   <use name="FWCore/ServiceRegistry"/>

@@ -13,6 +13,7 @@ from HLTriggerOffline.Exotica.ExoticaValidation_cff import *
 from HLTriggerOffline.SMP.SMPValidation_cff import *
 from HLTriggerOffline.Btag.HltBtagValidation_cff import *
 from HLTriggerOffline.Egamma.HLTmultiTrackValidatorGsfTracks_cff import *
+from HLTriggerOffline.Muon.HLTmultiTrackValidatorMuonTracks_cff import *
 # HCAL
 from Validation.HcalDigis.HLTHcalDigisParam_cfi import *
 from Validation.HcalRecHits.HLTHcalRecHitParam_cfi import *
@@ -48,6 +49,7 @@ hltassociation = cms.Sequence(
     +egammaSelectors
     +ExoticaValidationProdSeq
     +hltMultiTrackValidationGsfTracks
+    +hltMultiTrackValidationMuonTracks
     )
 from Configuration.Eras.Modifier_phase1Pixel_cff import phase1Pixel
 
@@ -58,7 +60,8 @@ from Configuration.Eras.Modifier_phase2_common_cff import phase2_common
 _phase2_hltassociation = hltassociation.copyAndExclude([
     egammaSelectors,
     ExoticaValidationProdSeq,
-    hltMultiTrackValidationGsfTracks
+    hltMultiTrackValidationGsfTracks,
+    hltMultiTrackValidationMuonTracks
 ])
 
 # Add hltTrackerphase2ValidationSource to the sequence
@@ -125,7 +128,8 @@ from Configuration.Eras.Modifier_fastSim_cff import fastSim
 fastSim.toReplaceWith(hltassociation, hltassociation.copyAndExclude([
     hltMultiTrackValidation,
     hltMultiPVValidation,
-    hltMultiTrackValidationGsfTracks
+    hltMultiTrackValidationGsfTracks,
+    hltMultiTrackValidationMuonTracks,
 ]))
 
 from Configuration.Eras.Modifier_pp_on_XeXe_2017_cff import pp_on_XeXe_2017

@@ -428,7 +428,9 @@ namespace edm {
       }
     }
 
-    void RandomNumberGeneratorService::preBeginJob(ProcessContext const&) { beginJobEndJobActive_ = true; }
+    void RandomNumberGeneratorService::preBeginJob(PathsAndConsumesOfModulesBase const&, ProcessContext const&) {
+      beginJobEndJobActive_ = true;
+    }
 
     void RandomNumberGeneratorService::postBeginJob() { beginJobEndJobActive_ = false; }
 

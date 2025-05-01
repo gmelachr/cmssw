@@ -1115,6 +1115,7 @@ void DTHVStatusHandler::filterData() {
     const DTHVStatus* iPtr = iter->first;
     const DTHVStatus* pPtr = prev->first;
     const DTHVStatus* nPtr = next->first;
+    iSize = std::distance(iPtr->begin(), iPtr->end());
     pSize = std::distance(pPtr->begin(), pPtr->end());
     nSize = std::distance(nPtr->begin(), nPtr->end());
     int dtot = nSize - pSize;

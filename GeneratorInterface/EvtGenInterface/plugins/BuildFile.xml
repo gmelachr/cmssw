@@ -1,5 +1,4 @@
 <library file="EvtGenUserModels/*.cpp,EvtGen/*.cc,myEvtRandomEngine.cc" name="EvtGenInterface">
-  <use name="FWCore/AbstractServices"/>
   <use name="FWCore/Framework"/>
   <use name="FWCore/MessageLogger"/>
   <use name="FWCore/ParameterSet"/>

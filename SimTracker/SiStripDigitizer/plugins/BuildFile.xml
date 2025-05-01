@@ -1,5 +1,4 @@
 <library file="*.cc" name="SimTrackerSiStripDigitizerPlugins">
-  <use name="FWCore/AbstractServices"/>
   <use name="FWCore/Framework"/>
   <use name="MagneticField/Engine"/>
   <use name="MagneticField/Records"/>

@@ -25,7 +25,7 @@ PlotCompareUtility::PlotCompareUtility(std::string Reference,
                                        std::string RefBasePath,
                                        std::string RefPrefix) {
   // open TFiles
-  cout << Reference << " " << New << endl;
+  cout << refFile << " " << newFile << endl;
   refFile = new TFile(Reference.c_str(), "READ");
   newFile = new TFile(New.c_str(), "READ");
 

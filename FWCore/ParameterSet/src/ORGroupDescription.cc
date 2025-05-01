@@ -53,45 +53,41 @@ namespace edm {
     wildcardTypes.insert(wildcardTypesLeft.begin(), wildcardTypesLeft.end());
   }
 
-  void ORGroupDescription::validate_(ParameterSet& pset,
-                                     std::set<std::string>& validatedLabels,
-                                     Modifier modifier) const {
+  void ORGroupDescription::validate_(ParameterSet& pset, std::set<std::string>& validatedLabels, bool optional) const {
     bool leftExists = node_left_->exists(pset);
     bool rightExists = node_right_->exists(pset);
 
     if (leftExists || rightExists) {
       if (leftExists)
-        node_left_->validate(pset, validatedLabels, Modifier::kNone);
+        node_left_->validate(pset, validatedLabels, false);
       if (rightExists)
-        node_right_->validate(pset, validatedLabels, Modifier::kNone);
+        node_right_->validate(pset, validatedLabels, false);
       return;
     }
 
-    if (modifier != Modifier::kNone)
+    if (optional)
       return;
 
-    node_left_->validate(pset, validatedLabels, Modifier::kNone);
+    node_left_->validate(pset, validatedLabels, false);
   }
 
   void ORGroupDescription::writeCfi_(std::ostream& os,
-                                     Modifier modifier,
+                                     bool optional,
                                      bool& startWithComma,
                                      int indentation,
                                      CfiOptions& options,
                                      bool& wroteSomething) const {
-    node_left_->writeCfi(os, modifier, startWithComma, indentation, options, wroteSomething);
+    node_left_->writeCfi(os, optional, startWithComma, indentation, options, wroteSomething);
   }
 
-  void ORGroupDescription::print_(std::ostream& os, Modifier modifier, bool writeToCfi, DocFormatHelper& dfh) const {
+  void ORGroupDescription::print_(std::ostream& os, bool optional, bool writeToCfi, DocFormatHelper& dfh) const {
     if (dfh.parent() == DocFormatHelper::OR) {
       dfh.decrementCounter();
-      node_left_->print(os, Modifier::kNone, true, dfh);
-      node_right_->print(os, Modifier::kNone, true, dfh);
+      node_left_->print(os, false, true, dfh);
+      node_right_->print(os, false, true, dfh);
       return;
     }
 
-    const bool optional = (modifier == Modifier::kOptional);
-    const bool obsolete = (modifier == Modifier::kObsolete);
     if (dfh.pass() == 1) {
       dfh.indent(os);
       os << "OR group:";
@@ -99,8 +95,6 @@ namespace edm {
       if (dfh.brief()) {
         if (optional)
           os << " optional";
-        if (obsolete)
-          os << " obsolete";
 
         if (!writeToCfi)
           os << " (do not write to cfi)";
@@ -114,8 +108,6 @@ namespace edm {
 
         if (optional)
           os << "optional";
-        if (obsolete)
-          os << " obsolete";
         if (!writeToCfi)
           os << " (do not write to cfi)";
         if (optional || !writeToCfi) {
@@ -170,14 +162,14 @@ namespace edm {
     new_dfh.setIndentation(indentation + DocFormatHelper::offsetSectionContent());
     new_dfh.setParent(DocFormatHelper::OR);
 
-    node_left_->print(os, Modifier::kNone, true, new_dfh);
-    node_right_->print(os, Modifier::kNone, true, new_dfh);
+    node_left_->print(os, false, true, new_dfh);
+    node_right_->print(os, false, true, new_dfh);
 
     new_dfh.setPass(1);
     new_dfh.setCounter(0);
 
-    node_left_->print(os, Modifier::kNone, true, new_dfh);
-    node_right_->print(os, Modifier::kNone, true, new_dfh);
+    node_left_->print(os, false, true, new_dfh);
+    node_right_->print(os, false, true, new_dfh);
 
     new_dfh.setPass(2);
     new_dfh.setCounter(0);

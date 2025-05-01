@@ -4,8 +4,10 @@ process = cms.Process("TEST")
 process.PoolDBESSource = cms.ESSource("PoolDBESSource",
     DBParameters = cms.PSet(
         authenticationPath = cms.untracked.string('/afs/cern.ch/cms/DB/conddb'),
+        authenticationMethod = cms.untracked.uint32(1)
     ),
     #bool loadAll = true
+    timetype = cms.string('runnumber'),
     toGet = cms.VPSet(cms.PSet(
         record = cms.string('CSCDCSDataRcd'),
         tag = cms.string('CSCDCSData')

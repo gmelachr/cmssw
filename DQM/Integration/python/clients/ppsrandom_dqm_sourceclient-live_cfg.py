@@ -90,6 +90,5 @@ process.dqmProvInfo.runType = process.runType.getRunTypeName()
 
 # Process customizations included here
 from DQM.Integration.config.online_customizations_cfi import *
-process = customise(process)
-print("Global Tag used:", process.GlobalTag.globaltag.value())
 print("Final Source settings:", process.source)
+process = customise(process)

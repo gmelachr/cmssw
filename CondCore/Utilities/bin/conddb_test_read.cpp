@@ -31,6 +31,7 @@ cond::TestReadUtilities::TestReadUtilities() : Utilities("conddb_copy_iov") {
 cond::TestReadUtilities::~TestReadUtilities() {}
 
 int cond::TestReadUtilities::execute() {
+  bool debug = hasDebug();
   std::string connect = getOptionValue<std::string>("connect");
 
   typedef boost::tokenizer<boost::char_separator<char>> tokenizer;

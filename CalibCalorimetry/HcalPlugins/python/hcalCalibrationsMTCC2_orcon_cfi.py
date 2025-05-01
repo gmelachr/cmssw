@@ -10,6 +10,7 @@ import FWCore.ParameterSet.Config as cms
 hcal_db_producer = cms.ESProducer("HcalDbProducer")
 
 es_pool = cms.ESSource("PoolDBESSource",
+    timetype = cms.string('runnumber'),
     toGet = cms.VPSet(cms.PSet(
         record = cms.string('HcalPedestalsRcd'),
         tag = cms.string('pedestals_mtcc2_v1')
@@ -36,6 +37,7 @@ es_pool = cms.ESSource("PoolDBESSource",
         )),
     connect = cms.string('oracle://orcon/CMS_COND_HCAL'), ##orcon/CMS_COND_HCAL"
 
+    authenticationMethod = cms.untracked.uint32(1)
 )
 
 es_hardcode = cms.ESSource("HcalHardcodeCalibrations",

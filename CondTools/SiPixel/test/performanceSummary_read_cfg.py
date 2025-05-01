@@ -16,6 +16,7 @@ process.PoolDBESSource = cms.ESSource("PoolDBESSource",
         messageLevel = cms.untracked.int32(2),
         authenticationPath = cms.untracked.string('.')
     ),
+    timetype = cms.string('runnumber'),
     toGet = cms.VPSet(cms.PSet(
         record = cms.string('SiPixelPerformanceSummaryRcd'),
         tag = cms.string('dummy')

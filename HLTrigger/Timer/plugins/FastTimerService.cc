@@ -822,7 +822,8 @@ FastTimerService::FastTimerService(const edm::ParameterSet& config, edm::Activit
 
   // register EDM call backs
   registry.watchPreallocate(this, &FastTimerService::preallocate);
-  registry.watchLookupInitializationComplete(this, &FastTimerService::lookupInitializationComplete);
+  registry.watchPreBeginJob(this, &FastTimerService::preBeginJob);
+  registry.watchPostBeginJob(this, &FastTimerService::postBeginJob);
   registry.watchPostEndJob(this, &FastTimerService::postEndJob);
   registry.watchPreGlobalBeginRun(this, &FastTimerService::preGlobalBeginRun);
   //registry.watchPostGlobalBeginRun(         this, & FastTimerService::postGlobalBeginRun );
@@ -989,9 +990,12 @@ void FastTimerService::preSourceConstruction(edm::ModuleDescription const& modul
   callgraph_.preSourceConstruction(module);
 }
 
-void FastTimerService::lookupInitializationComplete(edm::PathsAndConsumesOfModulesBase const& pathsAndConsumes,
-                                                    edm::ProcessContext const& context) {
-  callgraph_.lookupInitializationComplete(pathsAndConsumes, context);
+void FastTimerService::preBeginJob(edm::PathsAndConsumesOfModulesBase const& pathsAndConsumes,
+                                   edm::ProcessContext const& context) {
+  callgraph_.preBeginJob(pathsAndConsumes, context);
+}
+
+void FastTimerService::postBeginJob() {
   unsigned int modules = callgraph_.size();
 
   // module highlights

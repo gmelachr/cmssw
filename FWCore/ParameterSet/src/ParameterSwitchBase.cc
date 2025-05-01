@@ -59,7 +59,7 @@ namespace edm {
   }
 
   void ParameterSwitchBase::printBase(std::ostream& os,
-                                      Modifier modifier,
+                                      bool optional,
                                       bool writeToCfi,
                                       DocFormatHelper& dfh,
                                       std::string const& switchLabel,
@@ -77,8 +77,6 @@ namespace edm {
     if (dfh.pass() == 1) {
       dfh.indent(os);
 
-      const bool optional = (Modifier::kOptional == modifier);
-      const bool obsolete = (Modifier::kObsolete == modifier);
       if (dfh.brief()) {
         std::stringstream ss;
         ss << switchLabel << " (switch)";
@@ -98,8 +96,6 @@ namespace edm {
         os << " " << std::setw(dfh.column3());
         if (optional)
           os << "optional";
-        else if (obsolete)
-          os << "obsolete";
         else
           os << "";
 
@@ -121,8 +117,6 @@ namespace edm {
 
         if (optional)
           os << "optional";
-        if (obsolete)
-          os << "obsolete";
 
         if (!writeToCfi)
           os << " (do not write to cfi)";
@@ -178,7 +172,7 @@ namespace edm {
                                       DocFormatHelper& dfh,
                                       std::string const& switchLabel) {
     if (dfh.pass() == 0) {
-      p.second->print(os, Modifier::kNone, true, dfh);
+      p.second->print(os, false, true, dfh);
     }
     if (dfh.pass() == 1) {
       dfh.indent(os);
@@ -188,7 +182,7 @@ namespace edm {
       else
         os << "False";
       os << "\n";
-      p.second->print(os, Modifier::kNone, true, dfh);
+      p.second->print(os, false, true, dfh);
     }
     if (dfh.pass() == 2) {
       p.second->printNestedContent(os, false, dfh);
@@ -201,12 +195,12 @@ namespace edm {
                                       DocFormatHelper& dfh,
                                       std::string const& switchLabel) {
     if (dfh.pass() == 0) {
-      p.second->print(os, Modifier::kNone, true, dfh);
+      p.second->print(os, false, true, dfh);
     }
     if (dfh.pass() == 1) {
       dfh.indent(os);
       os << "if " << switchLabel << " = " << p.first << "\n";
-      p.second->print(os, Modifier::kNone, true, dfh);
+      p.second->print(os, false, true, dfh);
     }
     if (dfh.pass() == 2) {
       p.second->printNestedContent(os, false, dfh);
@@ -219,12 +213,12 @@ namespace edm {
                                       DocFormatHelper& dfh,
                                       std::string const& switchLabel) {
     if (dfh.pass() == 0) {
-      p.second->print(os, Modifier::kNone, true, dfh);
+      p.second->print(os, false, true, dfh);
     }
     if (dfh.pass() == 1) {
       dfh.indent(os);
       os << "if " << switchLabel << " = \"" << p.first << "\"\n";
-      p.second->print(os, Modifier::kNone, true, dfh);
+      p.second->print(os, false, true, dfh);
     }
     if (dfh.pass() == 2) {
       p.second->printNestedContent(os, false, dfh);

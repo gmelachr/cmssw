@@ -1,5 +1,4 @@
 #include "SimG4Core/PhysicsLists/interface/CMSEmStandardPhysics.h"
-#include "SimG4Core/Physics/interface/CMSG4TrackInterface.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
 #include <CLHEP/Units/SystemOfUnits.h>
@@ -78,8 +77,7 @@ CMSEmStandardPhysics::CMSEmStandardPhysics(G4int ver, const edm::ParameterSet& p
   fG4HepEmActive = p.getParameter<bool>("G4HepEmActive");
   std::string type = p.getParameter<std::string>("type");
   if (type == "SimG4Core/Physics/FTFP_BERT_EMH") {
-    int id = CMSG4TrackInterface::instance()->getThreadID();
-    edm::LogVerbatim("PhysicsList") << "EMM -> EMH: Forcing usage of G4HepEm; threadID=" << id;
+    edm::LogVerbatim("PhysicsList") << "EMM -> EMH: Forcing usage of G4HepEm";
     fG4HepEmActive = true;
   }
 }
@@ -91,9 +89,7 @@ void CMSEmStandardPhysics::ConstructParticle() {
 
 void CMSEmStandardPhysics::ConstructProcess() {
   if (verboseLevel > 0) {
-    int id = CMSG4TrackInterface::instance()->getThreadID();
-    edm::LogVerbatim("PhysicsList") << "### " << GetPhysicsName() << " Construct EM Processes; EMH=" << fG4HepEmActive
-                                    << " threadID=" << id;
+    edm::LogVerbatim("PhysicsList") << "### " << GetPhysicsName() << " Construct EM Processes";
   }
 
   // This EM builder takes default models of Geant4 10 EMV.

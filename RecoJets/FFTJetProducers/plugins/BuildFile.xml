@@ -1,7 +1,6 @@
 <export>
 </export>
 <library file="*.cc" name="RecoJetsFFTWJetProducers_plugins">
-  <use name="FWCore/AbstractServices"/>
   <use name="FWCore/Framework"/>
   <use name="FWCore/ServiceRegistry"/>
   <use name="FWCore/Utilities"/>

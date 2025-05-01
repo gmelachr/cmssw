@@ -51,16 +51,12 @@ namespace edm {
 
   class ParameterSetDescription {
   public:
-    using Modifier = ParameterModifier;
     class SetDescriptionEntry {
     public:
-      bool optional() const { return modifier_ == Modifier::kOptional; }
-      bool obsolete() const { return modifier_ == Modifier::kObsolete; }
-      Modifier modifier() const { return modifier_; }
+      bool optional() const { return optional_; }
       bool writeToCfi() const { return writeToCfi_; }
       edm::value_ptr<ParameterDescriptionNode> const& node() const { return node_; }
-
-      void setModifier(Modifier value) { modifier_ = value; }
+      void setOptional(bool value) { optional_ = value; }
       void setWriteToCfi(bool value) { writeToCfi_ = value; }
       ParameterDescriptionNode* setNode(std::unique_ptr<ParameterDescriptionNode> node) {
         node_ = std::move(node);
@@ -68,7 +64,7 @@ namespace edm {
       }
 
     private:
-      Modifier modifier_;
+      bool optional_;
       bool writeToCfi_;
       edm::value_ptr<ParameterDescriptionNode> node_;
     };
@@ -97,22 +93,22 @@ namespace edm {
 
     template <typename T, typename U>
     ParameterDescriptionBase* add(U const& iLabel, T const& value) {
-      return add<T, U>(iLabel, value, true, Modifier::kNone, true);
+      return add<T, U>(iLabel, value, true, false, true);
     }
 
     template <typename T, typename U>
     ParameterDescriptionBase* addUntracked(U const& iLabel, T const& value) {
-      return add<T, U>(iLabel, value, false, Modifier::kNone, true);
+      return add<T, U>(iLabel, value, false, false, true);
     }
 
     template <typename T, typename U>
     ParameterDescriptionBase* addOptional(U const& iLabel, T const& value) {
-      return add<T, U>(iLabel, value, true, Modifier::kOptional, true);
+      return add<T, U>(iLabel, value, true, true, true);
     }
 
     template <typename T, typename U>
     ParameterDescriptionBase* addOptionalUntracked(U const& iLabel, T const& value) {
-      return add<T, U>(iLabel, value, false, Modifier::kOptional, true);
+      return add<T, U>(iLabel, value, false, true, true);
     }
 
     // For the next 4 functions, there is no default so they will not get injected
@@ -120,40 +116,22 @@ namespace edm {
 
     template <typename T, typename U>
     ParameterDescriptionBase* add(U const& iLabel) {
-      return add<T, U>(iLabel, true, Modifier::kNone, true);
+      return add<T, U>(iLabel, true, false, true);
     }
 
     template <typename T, typename U>
     ParameterDescriptionBase* addUntracked(U const& iLabel) {
-      return add<T, U>(iLabel, false, Modifier::kNone, true);
+      return add<T, U>(iLabel, false, false, true);
     }
 
     template <typename T, typename U>
     ParameterDescriptionBase* addOptional(U const& iLabel) {
-      return add<T, U>(iLabel, true, Modifier::kOptional, true);
+      return add<T, U>(iLabel, true, true, true);
     }
 
     template <typename T, typename U>
     ParameterDescriptionBase* addOptionalUntracked(U const& iLabel) {
-      return add<T, U>(iLabel, false, Modifier::kOptional, true);
-    }
-
-    template <typename T, typename U>
-    ParameterDescriptionBase* addObsolete(U const& iLabel) {
-      if constexpr (std::is_same_v<T, edm::ParameterSetDescription>) {
-        return add<T, U>(iLabel, T(), true, Modifier::kObsolete, true);
-      } else {
-        return add<T, U>(iLabel, true, Modifier::kObsolete, true);
-      }
-    }
-
-    template <typename T, typename U>
-    ParameterDescriptionBase* addObsoleteUntracked(U const& iLabel) {
-      if constexpr (std::is_same_v<T, edm::ParameterSetDescription>) {
-        return add<T, U>(iLabel, T(), false, Modifier::kObsolete, true);
-      } else {
-        return add<T, U>(iLabel, false, Modifier::kObsolete, true);
-      }
+      return add<T, U>(iLabel, false, true, true);
     }
 
     // ***** Use these 8 functions for parameters of type vector<ParameterSet> *****
@@ -171,59 +149,48 @@ namespace edm {
     ParameterDescriptionBase* addVPSet(U const& iLabel,
                                        ParameterSetDescription const& validator,
                                        std::vector<ParameterSet> const& defaults) {
-      return addVPSet<U>(iLabel, validator, defaults, true, Modifier::kNone, true);
+      return addVPSet<U>(iLabel, validator, defaults, true, false, true);
     }
 
     template <typename U>
     ParameterDescriptionBase* addVPSetUntracked(U const& iLabel,
                                                 ParameterSetDescription const& validator,
                                                 std::vector<ParameterSet> const& defaults) {
-      return addVPSet<U>(iLabel, validator, defaults, false, Modifier::kNone, true);
+      return addVPSet<U>(iLabel, validator, defaults, false, false, true);
     }
 
     template <typename U>
     ParameterDescriptionBase* addVPSetOptional(U const& iLabel,
                                                ParameterSetDescription const& validator,
                                                std::vector<ParameterSet> const& defaults) {
-      return addVPSet<U>(iLabel, validator, defaults, true, Modifier::kOptional, true);
+      return addVPSet<U>(iLabel, validator, defaults, true, true, true);
     }
 
     template <typename U>
     ParameterDescriptionBase* addVPSetOptionalUntracked(U const& iLabel,
                                                         ParameterSetDescription const& validator,
                                                         std::vector<ParameterSet> const& defaults) {
-      return addVPSet<U>(iLabel, validator, defaults, false, Modifier::kOptional, true);
+      return addVPSet<U>(iLabel, validator, defaults, false, true, true);
     }
 
     template <typename U>
     ParameterDescriptionBase* addVPSet(U const& iLabel, ParameterSetDescription const& validator) {
-      return addVPSet<U>(iLabel, validator, true, Modifier::kNone, true);
+      return addVPSet<U>(iLabel, validator, true, false, true);
     }
 
     template <typename U>
     ParameterDescriptionBase* addVPSetUntracked(U const& iLabel, ParameterSetDescription const& validator) {
-      return addVPSet<U>(iLabel, validator, false, Modifier::kNone, true);
+      return addVPSet<U>(iLabel, validator, false, false, true);
     }
 
     template <typename U>
     ParameterDescriptionBase* addVPSetOptional(U const& iLabel, ParameterSetDescription const& validator) {
-      return addVPSet<U>(iLabel, validator, true, Modifier::kOptional, true);
+      return addVPSet<U>(iLabel, validator, true, true, true);
     }
 
     template <typename U>
     ParameterDescriptionBase* addVPSetOptionalUntracked(U const& iLabel, ParameterSetDescription const& validator) {
-      return addVPSet<U>(iLabel, validator, false, Modifier::kOptional, true);
-    }
-
-    template <typename U>
-    ParameterDescriptionBase* addVPSetObsolete(U const& iLabel) {
-      ParameterSetDescription validator;
-      return addVPSet<U>(iLabel, validator, true, Modifier::kObsolete, true);
-    }
-    template <typename U>
-    ParameterDescriptionBase* addVPSetObsoleteUntracked(U const& iLabel) {
-      ParameterSetDescription validator;
-      return addVPSet<U>(iLabel, validator, false, Modifier::kObsolete, true);
+      return addVPSet<U>(iLabel, validator, false, true, true);
     }
 
     // ********* Wildcards *********
@@ -252,46 +219,46 @@ namespace edm {
     template <typename T>
     ParameterDescriptionNode* ifValue(ParameterDescription<T> const& switchParameter,
                                       std::unique_ptr<ParameterDescriptionCases<T>> cases) {
-      return ifValue<T>(switchParameter, std::move(cases), Modifier::kNone, true);
+      return ifValue<T>(switchParameter, std::move(cases), false, true);
     }
 
     template <typename T>
     ParameterDescriptionNode* ifValueOptional(ParameterDescription<T> const& switchParameter,
                                               std::unique_ptr<ParameterDescriptionCases<T>> cases,
                                               bool writeToCfi) {
-      return ifValue<T>(switchParameter, std::move(cases), Modifier::kOptional, writeToCfi);
+      return ifValue<T>(switchParameter, std::move(cases), true, writeToCfi);
     }
 
     // ********* if exists ************
     ParameterDescriptionNode* ifExists(ParameterDescriptionNode const& node1, ParameterDescriptionNode const& node2) {
-      return ifExists(node1, node2, Modifier::kNone, true);
+      return ifExists(node1, node2, false, true);
     }
 
     ParameterDescriptionNode* ifExistsOptional(ParameterDescriptionNode const& node1,
                                                ParameterDescriptionNode const& node2,
                                                bool writeToCfi) {
-      return ifExists(node1, node2, Modifier::kOptional, writeToCfi);
+      return ifExists(node1, node2, true, writeToCfi);
     }
 
     // ********* for parameters that are a list of allowed labels *********
     template <typename T, typename U>
     ParameterDescriptionNode* labelsFrom(U const& iLabel) {
-      return labelsFrom<T, U>(iLabel, true, Modifier::kNone, true);
+      return labelsFrom<T, U>(iLabel, true, false, true);
     }
 
     template <typename T, typename U>
     ParameterDescriptionNode* labelsFromUntracked(U const& iLabel) {
-      return labelsFrom<T, U>(iLabel, false, Modifier::kNone, true);
+      return labelsFrom<T, U>(iLabel, false, false, true);
     }
 
     template <typename T, typename U>
     ParameterDescriptionNode* labelsFromOptional(U const& iLabel, bool writeToCfi) {
-      return labelsFrom<T, U>(iLabel, true, Modifier::kOptional, writeToCfi);
+      return labelsFrom<T, U>(iLabel, true, true, writeToCfi);
     }
 
     template <typename T, typename U>
     ParameterDescriptionNode* labelsFromOptionalUntracked(U const& iLabel, bool writeToCfi) {
-      return labelsFrom<T, U>(iLabel, false, Modifier::kOptional, writeToCfi);
+      return labelsFrom<T, U>(iLabel, false, true, writeToCfi);
     }
 
     // These next four functions only work when the template
@@ -304,22 +271,22 @@ namespace edm {
     // T must be explicitly specified by the calling function.
     template <typename T, typename U, typename V>
     ParameterDescriptionNode* labelsFrom(U const& iLabel, V const& desc) {
-      return labelsFrom<T, U, V>(iLabel, true, Modifier::kNone, true, desc);
+      return labelsFrom<T, U, V>(iLabel, true, false, true, desc);
     }
 
     template <typename T, typename U, typename V>
     ParameterDescriptionNode* labelsFromUntracked(U const& iLabel, V const& desc) {
-      return labelsFrom<T, U, V>(iLabel, false, Modifier::kNone, true, desc);
+      return labelsFrom<T, U, V>(iLabel, false, false, true, desc);
     }
 
     template <typename T, typename U, typename V>
     ParameterDescriptionNode* labelsFromOptional(U const& iLabel, bool writeToCfi, V const& desc) {
-      return labelsFrom<T, U, V>(iLabel, true, Modifier::kOptional, writeToCfi, desc);
+      return labelsFrom<T, U, V>(iLabel, true, true, writeToCfi, desc);
     }
 
     template <typename T, typename U, typename V>
     ParameterDescriptionNode* labelsFromOptionalUntracked(U const& iLabel, bool writeToCfi, V const& desc) {
-      return labelsFrom<T, U, V>(iLabel, false, Modifier::kOptional, writeToCfi, desc);
+      return labelsFrom<T, U, V>(iLabel, false, true, writeToCfi, desc);
     }
 
     bool anythingAllowed() const { return anythingAllowed_; }
@@ -344,47 +311,44 @@ namespace edm {
 
   private:
     template <typename T, typename U>
-    ParameterDescriptionBase* add(U const& iLabel, T const& value, bool isTracked, Modifier modifier, bool writeToCfi);
+    ParameterDescriptionBase* add(U const& iLabel, T const& value, bool isTracked, bool isOptional, bool writeToCfi);
 
     template <typename T, typename U>
-    ParameterDescriptionBase* add(U const& iLabel, bool isTracked, Modifier modifier, bool writeToCfi);
+    ParameterDescriptionBase* add(U const& iLabel, bool isTracked, bool isOptional, bool writeToCfi);
 
     template <typename U>
     ParameterDescriptionBase* addVPSet(U const& iLabel,
                                        ParameterSetDescription const& validator,
                                        std::vector<ParameterSet> const& defaults,
                                        bool isTracked,
-                                       Modifier modifier,
+                                       bool isOptional,
                                        bool writeToCfi);
 
     template <typename U>
     ParameterDescriptionBase* addVPSet(
-        U const& iLabel, ParameterSetDescription const& validator, bool isTracked, Modifier modifier, bool writeToCfi);
+        U const& iLabel, ParameterSetDescription const& validator, bool isTracked, bool isOptional, bool writeToCfi);
 
     template <typename T, typename U>
     ParameterWildcardBase* addWildcard(U const& pattern, bool isTracked);
 
-    ParameterDescriptionNode* addNode(std::unique_ptr<ParameterDescriptionNode> node,
-                                      Modifier modifier,
-                                      bool writeToCfi);
+    ParameterDescriptionNode* addNode(std::unique_ptr<ParameterDescriptionNode> node, bool optional, bool writeToCfi);
 
     template <typename T>
     ParameterDescriptionNode* ifValue(ParameterDescription<T> const& switchParameter,
                                       std::unique_ptr<ParameterDescriptionCases<T>> cases,
-                                      Modifier modifier,
+                                      bool optional,
                                       bool writeToCfi);
 
     ParameterDescriptionNode* ifExists(ParameterDescriptionNode const& node1,
                                        ParameterDescriptionNode const& node2,
-                                       Modifier modifier,
+                                       bool optional,
                                        bool writeToCfi);
 
     template <typename T, typename U>
-    ParameterDescriptionNode* labelsFrom(U const& iLabel, bool isTracked, Modifier modifier, bool writeToCfi);
+    ParameterDescriptionNode* labelsFrom(U const& iLabel, bool isTracked, bool optional, bool writeToCfi);
 
     template <typename T, typename U, typename V>
-    ParameterDescriptionNode* labelsFrom(
-        U const& iLabel, bool isTracked, Modifier modifier, bool writeToCfi, V const& desc);
+    ParameterDescriptionNode* labelsFrom(U const& iLabel, bool isTracked, bool optional, bool writeToCfi, V const& desc);
 
     static void validateNode(SetDescriptionEntry const& entry,
                              ParameterSet& pset,
@@ -426,20 +390,20 @@ namespace edm {
 
   template <typename T, typename U>
   ParameterDescriptionBase* ParameterSetDescription::add(
-      U const& iLabel, T const& value, bool isTracked, Modifier modifier, bool writeToCfi) {
+      U const& iLabel, T const& value, bool isTracked, bool isOptional, bool writeToCfi) {
     std::unique_ptr<ParameterDescriptionNode> node =
         std::make_unique<ParameterDescription<T>>(iLabel, value, isTracked);
-    ParameterDescriptionNode* pnode = addNode(std::move(node), modifier, writeToCfi);
+    ParameterDescriptionNode* pnode = addNode(std::move(node), isOptional, writeToCfi);
     return static_cast<ParameterDescriptionBase*>(pnode);
   }
 
   template <typename T, typename U>
   ParameterDescriptionBase* ParameterSetDescription::add(U const& iLabel,
                                                          bool isTracked,
-                                                         Modifier modifier,
+                                                         bool isOptional,
                                                          bool writeToCfi) {
     std::unique_ptr<ParameterDescriptionNode> node = std::make_unique<ParameterDescription<T>>(iLabel, isTracked);
-    ParameterDescriptionNode* pnode = addNode(std::move(node), modifier, writeToCfi);
+    ParameterDescriptionNode* pnode = addNode(std::move(node), isOptional, writeToCfi);
     return static_cast<ParameterDescriptionBase*>(pnode);
   }
 
@@ -448,20 +412,20 @@ namespace edm {
                                                               ParameterSetDescription const& validator,
                                                               std::vector<ParameterSet> const& defaults,
                                                               bool isTracked,
-                                                              Modifier modifier,
+                                                              bool isOptional,
                                                               bool writeToCfi) {
     std::unique_ptr<ParameterDescriptionNode> node =
         std::make_unique<ParameterDescription<std::vector<ParameterSet>>>(iLabel, validator, isTracked, defaults);
-    ParameterDescriptionNode* pnode = addNode(std::move(node), modifier, writeToCfi);
+    ParameterDescriptionNode* pnode = addNode(std::move(node), isOptional, writeToCfi);
     return static_cast<ParameterDescriptionBase*>(pnode);
   }
 
   template <typename U>
   ParameterDescriptionBase* ParameterSetDescription::addVPSet(
-      U const& iLabel, ParameterSetDescription const& validator, bool isTracked, Modifier modifier, bool writeToCfi) {
+      U const& iLabel, ParameterSetDescription const& validator, bool isTracked, bool isOptional, bool writeToCfi) {
     std::unique_ptr<ParameterDescriptionNode> node =
         std::make_unique<ParameterDescription<std::vector<ParameterSet>>>(iLabel, validator, isTracked);
-    ParameterDescriptionNode* pnode = addNode(std::move(node), modifier, writeToCfi);
+    ParameterDescriptionNode* pnode = addNode(std::move(node), isOptional, writeToCfi);
     return static_cast<ParameterDescriptionBase*>(pnode);
   }
 
@@ -469,35 +433,35 @@ namespace edm {
   ParameterWildcardBase* ParameterSetDescription::addWildcard(U const& pattern, bool isTracked) {
     std::unique_ptr<ParameterDescriptionNode> node =
         std::make_unique<ParameterWildcard<T>>(pattern, RequireZeroOrMore, isTracked);
-    ParameterDescriptionNode* pnode = addNode(std::move(node), Modifier::kOptional, true);
+    ParameterDescriptionNode* pnode = addNode(std::move(node), true, true);
     return static_cast<ParameterWildcardBase*>(pnode);
   }
 
   template <typename T>
   ParameterDescriptionNode* ParameterSetDescription::ifValue(ParameterDescription<T> const& switchParameter,
                                                              std::unique_ptr<ParameterDescriptionCases<T>> cases,
-                                                             Modifier modifier,
+                                                             bool optional,
                                                              bool writeToCfi) {
     std::unique_ptr<ParameterDescriptionNode> pdswitch =
         std::make_unique<ParameterSwitch<T>>(switchParameter, std::move(cases));
-    return addNode(std::move(pdswitch), modifier, writeToCfi);
+    return addNode(std::move(pdswitch), optional, writeToCfi);
   }
 
   template <typename T, typename U>
   ParameterDescriptionNode* ParameterSetDescription::labelsFrom(U const& iLabel,
                                                                 bool isTracked,
-                                                                Modifier modifier,
+                                                                bool optional,
                                                                 bool writeToCfi) {
     std::unique_ptr<ParameterDescriptionNode> pd = std::make_unique<AllowedLabelsDescription<T>>(iLabel, isTracked);
-    return addNode(std::move(pd), modifier, writeToCfi);
+    return addNode(std::move(pd), optional, writeToCfi);
   }
 
   template <typename T, typename U, typename V>
   ParameterDescriptionNode* ParameterSetDescription::labelsFrom(
-      U const& iLabel, bool isTracked, Modifier modifier, bool writeToCfi, V const& desc) {
+      U const& iLabel, bool isTracked, bool optional, bool writeToCfi, V const& desc) {
     std::unique_ptr<ParameterDescriptionNode> pd =
         std::make_unique<AllowedLabelsDescription<T>>(iLabel, desc, isTracked);
-    return addNode(std::move(pd), modifier, writeToCfi);
+    return addNode(std::move(pd), optional, writeToCfi);
   }
 }  // namespace edm
 

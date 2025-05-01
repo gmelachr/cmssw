@@ -137,8 +137,7 @@ EcalCalibrationOutput
 ExpressOutput
 ExpressAlignmentOutput
 ExpressCosmicsOutput
-HLTMonitorOutput		      # CMSHLT-3444
-CosmicHLTMonitorOutput		      # CMSHLT-3439
+HLTMonitorOutput		      # CMSHLT-3092
 NanoDSTOutput
 PhysicsCommissioningOutput
 

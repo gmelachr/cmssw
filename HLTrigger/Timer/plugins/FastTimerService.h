@@ -65,7 +65,8 @@ private:
 
   void preallocate(edm::service::SystemBounds const&);
 
-  void lookupInitializationComplete(edm::PathsAndConsumesOfModulesBase const&, edm::ProcessContext const&);
+  void preBeginJob(edm::PathsAndConsumesOfModulesBase const&, edm::ProcessContext const&);
+  void postBeginJob();
 
   void postEndJob();
 

@@ -5,7 +5,6 @@
 
 #include <string>
 #include <vector>
-#include <memory>
 #include "Event.h"
 
 namespace emtf {
@@ -14,46 +13,43 @@ namespace emtf {
   public:
     Node();
     Node(std::string cName);
-    ~Node() = default;
+    ~Node();
 
     Node(Node &&) = default;
     Node(const Node &) = delete;
     Node &operator=(const Node &) = delete;
 
-    std::string getName() const;
+    std::string getName();
     void setName(std::string sName);
 
-    double getErrorReduction() const;
+    double getErrorReduction();
     void setErrorReduction(double sErrorReduction);
 
     Node *getLeftDaughter();
-    const Node *getLeftDaughter() const;
-    void setLeftDaughter(std::unique_ptr<Node> sLeftDaughter);
+    void setLeftDaughter(Node *sLeftDaughter);
 
-    const Node *getRightDaughter() const;
     Node *getRightDaughter();
-    void setRightDaughter(std::unique_ptr<Node> sLeftDaughter);
+    void setRightDaughter(Node *sLeftDaughter);
 
     Node *getParent();
-    const Node *getParent() const;
     void setParent(Node *sParent);
 
-    double getSplitValue() const;
+    double getSplitValue();
     void setSplitValue(double sSplitValue);
 
-    int getSplitVariable() const;
+    int getSplitVariable();
     void setSplitVariable(int sSplitVar);
 
-    double getFitValue() const;
+    double getFitValue();
     void setFitValue(double sFitValue);
 
-    double getTotalError() const;
+    double getTotalError();
     void setTotalError(double sTotalError);
 
-    double getAvgError() const;
+    double getAvgError();
     void setAvgError(double sAvgError);
 
-    int getNumEvents() const;
+    int getNumEvents();
     void setNumEvents(int sNumEvents);
 
     std::vector<std::vector<Event *> > &getEvents();
@@ -68,8 +64,8 @@ namespace emtf {
   private:
     std::string name;
 
-    std::unique_ptr<Node> leftDaughter;
-    std::unique_ptr<Node> rightDaughter;
+    Node *leftDaughter;
+    Node *rightDaughter;
     Node *parent;
 
     double splitValue;

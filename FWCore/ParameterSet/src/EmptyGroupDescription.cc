@@ -14,17 +14,17 @@ namespace edm {
 
   void EmptyGroupDescription::validate_(ParameterSet&,
                                         std::set<std::string>& /*validatedLabels*/,
-                                        Modifier /*optional*/) const {}
+                                        bool /*optional*/) const {}
 
   void EmptyGroupDescription::writeCfi_(std::ostream&,
-                                        Modifier /*optional*/,
+                                        bool /*optional*/,
                                         bool& /*startWithComma*/,
                                         int /*indentation*/,
                                         CfiOptions&,
                                         bool& /*wroteSomething*/) const {}
 
   void EmptyGroupDescription::print_(std::ostream& os,
-                                     Modifier /*optional*/,
+                                     bool /*optional*/,
                                      bool /*writeToCfi*/,
                                      DocFormatHelper& dfh) const {
     if (dfh.pass() == 1) {

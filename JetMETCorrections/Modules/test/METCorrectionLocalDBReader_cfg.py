@@ -35,6 +35,7 @@ process.source = cms.Source("EmptySource")
 
 process.PoolDBESSource = cms.ESSource("PoolDBESSource",
       process.CondDB,
+      timetype = cms.string('runnumber'),
       toGet = cms.VPSet(
       cms.PSet(
               record = cms.string('MEtXYcorrectRecord'),# plugin 

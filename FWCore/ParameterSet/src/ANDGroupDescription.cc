@@ -53,30 +53,28 @@ namespace edm {
     wildcardTypes.insert(wildcardTypesLeft.begin(), wildcardTypesLeft.end());
   }
 
-  void ANDGroupDescription::validate_(ParameterSet& pset,
-                                      std::set<std::string>& validatedLabels,
-                                      Modifier modifier) const {
-    if (partiallyExists(pset) || modifier == Modifier::kNone) {
-      node_left_->validate(pset, validatedLabels, Modifier::kNone);
-      node_right_->validate(pset, validatedLabels, Modifier::kNone);
+  void ANDGroupDescription::validate_(ParameterSet& pset, std::set<std::string>& validatedLabels, bool optional) const {
+    if (partiallyExists(pset) || !optional) {
+      node_left_->validate(pset, validatedLabels, false);
+      node_right_->validate(pset, validatedLabels, false);
     }
   }
 
   void ANDGroupDescription::writeCfi_(std::ostream& os,
-                                      Modifier modifier,
+                                      bool optional,
                                       bool& startWithComma,
                                       int indentation,
                                       CfiOptions& options,
                                       bool& wroteSomething) const {
-    node_left_->writeCfi(os, modifier, startWithComma, indentation, options, wroteSomething);
-    node_right_->writeCfi(os, modifier, startWithComma, indentation, options, wroteSomething);
+    node_left_->writeCfi(os, optional, startWithComma, indentation, options, wroteSomething);
+    node_right_->writeCfi(os, optional, startWithComma, indentation, options, wroteSomething);
   }
 
-  void ANDGroupDescription::print_(std::ostream& os, Modifier modifier, bool writeToCfi, DocFormatHelper& dfh) const {
+  void ANDGroupDescription::print_(std::ostream& os, bool optional, bool writeToCfi, DocFormatHelper& dfh) const {
     if (dfh.parent() == DocFormatHelper::AND) {
       dfh.decrementCounter();
-      node_left_->print(os, Modifier::kNone, true, dfh);
-      node_right_->print(os, Modifier::kNone, true, dfh);
+      node_left_->print(os, false, true, dfh);
+      node_right_->print(os, false, true, dfh);
       return;
     }
 
@@ -84,13 +82,9 @@ namespace edm {
       dfh.indent(os);
       os << "AND group:";
 
-      bool const optional = (modifier == Modifier::kOptional);
-      bool const obsolete = (modifier == Modifier::kObsolete);
       if (dfh.brief()) {
         if (optional)
           os << " optional";
-        if (obsolete)
-          os << " obsolete";
 
         if (!writeToCfi)
           os << " (do not write to cfi)";
@@ -104,8 +98,6 @@ namespace edm {
 
         if (optional)
           os << "optional";
-        if (obsolete)
-          os << " obsolete";
         if (!writeToCfi)
           os << " (do not write to cfi)";
         if (optional || !writeToCfi) {
@@ -157,14 +149,14 @@ namespace edm {
     new_dfh.setIndentation(indentation + DocFormatHelper::offsetSectionContent());
     new_dfh.setParent(DocFormatHelper::AND);
 
-    node_left_->print(os, Modifier::kNone, true, new_dfh);
-    node_right_->print(os, Modifier::kNone, true, new_dfh);
+    node_left_->print(os, false, true, new_dfh);
+    node_right_->print(os, false, true, new_dfh);
 
     new_dfh.setPass(1);
     new_dfh.setCounter(0);
 
-    node_left_->print(os, Modifier::kNone, true, new_dfh);
-    node_right_->print(os, Modifier::kNone, true, new_dfh);
+    node_left_->print(os, false, true, new_dfh);
+    node_right_->print(os, false, true, new_dfh);
 
     new_dfh.setPass(2);
     new_dfh.setCounter(0);

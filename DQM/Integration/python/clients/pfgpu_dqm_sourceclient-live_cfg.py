@@ -138,6 +138,5 @@ process.options.wantSummary = True
 
 # tracer
 #process.Tracer = cms.Service("Tracer")
-process = customise(process)
-print("Global Tag used:", process.GlobalTag.globaltag.value())
 print("Final Source settings:", process.source)
+process = customise(process)

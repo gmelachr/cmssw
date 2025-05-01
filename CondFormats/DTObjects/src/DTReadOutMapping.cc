@@ -448,6 +448,7 @@ DTReadOutMapping* DTReadOutMapping::expandMap(const DTReadOutMapping& compMap) {
     whe = rosEntry.wheelId;
     def = rosEntry.stationId;
     sec = rosEntry.sectorId;
+    rob = rosEntry.slId;
     mt1 = rosEntry.layerId;
     mi1 = rosEntry.cellId;
     iros = entryList.begin();

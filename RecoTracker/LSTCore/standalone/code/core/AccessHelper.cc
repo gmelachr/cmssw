@@ -207,23 +207,11 @@ std::vector<unsigned int> getModuleIdxsFromT5(LSTEvent* event, unsigned int T5) 
   }
   return module_idxs;
 }
-
 //____________________________________________________________________________________________
-std::vector<unsigned int> getModuleIdxsFromT3(LSTEvent* event, unsigned int T3) {
-  std::vector<unsigned int> hits = getHitsFromT3(event, T3);
-  std::vector<unsigned int> module_idxs;
-  auto hitsEvt = event->getHits<HitsSoA>();
-  for (auto& hitIdx : hits) {
-    module_idxs.push_back(hitsEvt.moduleIndices()[hitIdx]);
-  }
-  return module_idxs;
+std::vector<unsigned int> getHitTypesFromT5(LSTEvent* event, unsigned int T5) {
+  return {4, 4, 4, 4, 4, 4, 4, 4, 4, 4};
+  ;
 }
-
-//____________________________________________________________________________________________
-std::vector<unsigned int> getHitTypesFromT5(LSTEvent* event, unsigned int T5) { return {4, 4, 4, 4, 4, 4, 4, 4, 4, 4}; }
-
-//____________________________________________________________________________________________
-std::vector<unsigned int> getHitTypesFromT3(LSTEvent* event, unsigned int T5) { return {4, 4, 4, 4, 4, 4}; }
 
 //____________________________________________________________________________________________
 std::tuple<std::vector<unsigned int>, std::vector<unsigned int>> getHitIdxsAndHitTypesFromT5(LSTEvent* event,

@@ -11,15 +11,15 @@ process.PoolDBESSource = cms.ESSource("PoolDBESSource",
         tag = cms.string('mytest')
     ), cms.PSet(
         record = cms.string('anotherPedestalsRcd'),
-        tag = cms.string('mytest_1')
+        tag = cms.string('anothermytest')
     )),
-    connect = cms.string('frontier://FrontierPrep/CMS_CONDITIONS')
+    connect = cms.string('sqlite_file:test.db')
 )
 
 process.source = cms.Source("EmptyIOVSource",
     lastValue = cms.uint64(3),
     timetype = cms.string('runnumber'),
-    firstValue = cms.uint64(200000),
+    firstValue = cms.uint64(1),
     interval = cms.uint64(1)
 )
 

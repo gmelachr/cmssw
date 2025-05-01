@@ -15,6 +15,8 @@ import FWCore.ParameterSet.Config as cms
 
 process = cms.Process("TEST")
 process.PoolDBESSource = cms.ESSource("PoolDBESSource",
+    siteLocalConfig = cms.untracked.bool(True),
+    loadAll = cms.bool(True),
     toGet = cms.VPSet(cms.PSet(
         record = cms.string('TrackerAlignmentRcd'),
         tag = cms.string('TrackerIdealGeometry')
@@ -23,8 +25,11 @@ process.PoolDBESSource = cms.ESSource("PoolDBESSource",
             record = cms.string('TrackerAlignmentErrorRcd'),
             tag = cms.string('TrackerIdealGeometryErrors')
         )),
+    messagelevel = cms.untracked.uint32(0),
+    timetype = cms.string('runnumber'),
     connect = cms.string('frontier://cms_conditions_data/CMS_COND_ALIGNMENT'), ##cms_conditions_data/CMS_COND_ALIGNMENT"
 
+    authenticationMethod = cms.untracked.uint32(0)
 )
 
 process.source = cms.Source("EmptySource",

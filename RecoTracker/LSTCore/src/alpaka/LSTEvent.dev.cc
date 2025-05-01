@@ -57,7 +57,6 @@ void LSTEvent::resetEventSync() {
   miniDoubletsDC_.reset();
   rangesDC_.reset();
   segmentsDC_.reset();
-  pixelSegmentsDC_.reset();
   tripletsDC_.reset();
   quintupletsDC_.reset();
   trackCandidatesDC_.reset();
@@ -68,7 +67,6 @@ void LSTEvent::resetEventSync() {
   rangesHC_.reset();
   miniDoubletsHC_.reset();
   segmentsHC_.reset();
-  pixelSegmentsHC_.reset();
   tripletsHC_.reset();
   quintupletsHC_.reset();
   pixelTripletsHC_.reset();

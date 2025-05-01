@@ -1,10 +1,10 @@
 #include "GeneratorInterface/TauolaInterface/interface/TauSpinnerFilter.h"
 
-#include "FWCore/AbstractServices/interface/RandomNumberGenerator.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
 #include "FWCore/ServiceRegistry/interface/Service.h"
-#include "FWCore/ServiceRegistry/interface/RandomEngineSentry.h"
+#include "FWCore/Utilities/interface/RandomNumberGenerator.h"
 #include "FWCore/Utilities/interface/Exception.h"
+#include "FWCore/ServiceRegistry/interface/RandomEngineSentry.h"
 
 TauSpinnerFilter::TauSpinnerFilter(const edm::ParameterSet& pset)
     : WTToken_(consumes<double>(pset.getParameter<edm::InputTag>("src"))), fRandomEngine(nullptr), ntaus_(0) {

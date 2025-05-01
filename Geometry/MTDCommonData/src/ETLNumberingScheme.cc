@@ -33,59 +33,49 @@ uint32_t ETLNumberingScheme::getUnitID(const MTDBaseNumber& baseNumber) const {
   }
 
   const bool prev8(baseNumber.getLevelName(2).find("Sensor") != std::string::npos);
-  const bool prev9(baseNumber.getLevelName(2).find("Half_") == std::string::npos);
 
-  std::stringstream ss;
-  auto dump_levels = [&]() {
-    for (size_t ii = 0; ii < nLevels; ii++) {
-      ss << ii << ": " << baseNumber.getLevelName(ii) << "  ";
-    }
-    ss << "\nReturning 0";
-    return ss.str();
-  };
-
-  uint32_t modCopy(baseNumber.getCopyNumber(2));
-  if (!prev9) {
-    modCopy = baseNumber.getCopyNumber(3);
-  }
-  uint32_t modtyp(0);
-  if (prev9) {
-    modtyp = (baseNumber.getLevelName(2).find("_Left") != std::string::npos) ? 1 : 2;
-  } else {
-    modtyp = baseNumber.getCopyNumber(2);
-  }
-  uint32_t sensor(0);
+  const uint32_t modCopy(baseNumber.getCopyNumber(2));
+  uint32_t sensor = 0;
   if (!prev8) {
     sensor = baseNumber.getCopyNumber(1);
   }
-  // for v9 keep the same sensor order inside a module as in v8
-  if (!prev9 && modtyp == 2) {
-    sensor = (sensor == 1) ? 2 : 1;
-  }
+
+  int modtyp(0);
 
   uint32_t discN, sectorS, sectorN;
-  uint32_t offset = prev9 ? 3 : 4;
-  discN = (baseNumber.getLevelName(offset + 1).find("Disc1") != std::string::npos) ? 0 : 1;
-  sectorS = (baseNumber.getLevelName(offset).find("Front") != std::string::npos) ? 0 : 1;
-  sectorN = baseNumber.getCopyNumber(offset);
+  discN = (baseNumber.getLevelName(4).find("Disc1") != std::string::npos) ? 0 : 1;
+  sectorS = (baseNumber.getLevelName(3).find("Front") != std::string::npos) ? 0 : 1;
+  sectorN = baseNumber.getCopyNumber(3);
 
   ETLDetId tmpId;
-  uint32_t ringCopy = static_cast<int>(tmpId.encodeSector(discN, sectorS, sectorN));
+  int ringCopy = static_cast<int>(tmpId.encodeSector(discN, sectorS, sectorN));
 
-  uint32_t nSide(999);
-  if (baseNumber.getLevelName(7).find("CALOECTSFront") != std::string::npos) {
+  modtyp = (baseNumber.getLevelName(2).find("_Left") != std::string::npos) ? 1 : 2;
+
+  int nSide(7);
+  const std::string_view& sideName(baseNumber.getLevelName(nSide));
+  if (sideName.find("CALOECTSFront") != std::string::npos) {
     nSide = 8;
-  } else if (baseNumber.getLevelName(8).find("CALOECTSFront") != std::string::npos) {
-    nSide = 9;
   } else {
-    edm::LogWarning("MTDGeom") << "ETLNumberingScheme::getUnitID(): incorrect volume stack: \n" << dump_levels();
+    edm::LogWarning("MTDGeom") << "ETLNumberingScheme::getUnitID(): incorrect volume stack: \n"
+                               << baseNumber.getLevelName(0) << ", " << baseNumber.getLevelName(1) << ", "
+                               << baseNumber.getLevelName(2) << ", " << baseNumber.getLevelName(3) << ", "
+                               << baseNumber.getLevelName(4) << ", " << baseNumber.getLevelName(5) << ", "
+                               << baseNumber.getLevelName(6) << ", " << baseNumber.getLevelName(7) << ", "
+                               << baseNumber.getLevelName(8) << ", " << baseNumber.getLevelName(9) << ", "
+                               << baseNumber.getLevelName(10) << ", " << baseNumber.getLevelName(11) << "\nReturning 0";
     return 0;
   }
   const uint32_t sideCopy(baseNumber.getCopyNumber(nSide));
   const uint32_t zside(sideCopy == 1 ? 1 : 0);
 
 #ifdef EDM_ML_DEBUG
-  edm::LogInfo("MTDGeom") << dump_levels();
+  edm::LogInfo("MTDGeom") << baseNumber.getLevelName(0) << ", " << baseNumber.getLevelName(1) << ", "
+                          << baseNumber.getLevelName(2) << ", " << baseNumber.getLevelName(3) << ", "
+                          << baseNumber.getLevelName(4) << ", " << baseNumber.getLevelName(5) << ", "
+                          << baseNumber.getLevelName(6) << ", " << baseNumber.getLevelName(7) << ", "
+                          << baseNumber.getLevelName(8) << ", " << baseNumber.getLevelName(9) << ", "
+                          << baseNumber.getLevelName(10) << ", " << baseNumber.getLevelName(11);
 #endif
 
   // error checking

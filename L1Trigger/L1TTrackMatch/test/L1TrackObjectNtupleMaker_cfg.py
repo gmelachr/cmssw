@@ -20,7 +20,6 @@ DISPLACED = ''
 
 
 runVtxNN = True
-runDispVert = False
 ############################################################
 # import standard configurations
 ############################################################
@@ -97,7 +96,8 @@ process.load("L1Trigger.L1TTrackMatch.l1tTrackerHTMiss_cfi")
 process.load("L1Trigger.L1TTrackMatch.l1tTrackerEmuHTMiss_cfi")
 process.load("L1Trigger.L1TTrackMatch.l1tTrackTripletEmulation_cfi")
 process.load('L1Trigger.VertexFinder.l1tVertexProducer_cfi')
-process.load('L1Trigger.L1TTrackMatch.DisplacedVertexProducer_cfi')
+ 
+
 
 ############################################################
 # Primary vertex
@@ -170,8 +170,6 @@ elif (L1TRKALGO == 'HYBRID_DISPLACED'):
     process.pTkMET = cms.Path(process.l1tTrackerEtMissExtended)
     process.pTkMHT = cms.Path(process.l1tTrackerHTMissExtended)
     process.pTkMHTEmulator = cms.Path(process.l1tTrackerEmuHTMissExtended)
-    if(runDispVert):
-        process.DispVert = cms.Path(process.DisplacedVertexProducer)
     DISPLACED = 'Displaced'#
 
 # HYBRID: extended tracking
@@ -193,8 +191,6 @@ elif (L1TRKALGO == 'HYBRID_PROMPTANDDISP'):
     process.pTkMHT = cms.Path(process.l1tTrackerHTMiss*process.l1tTrackerHTMissExtended)
     process.pTkMHTEmulator = cms.Path(process.l1tTrackerEmuHTMiss*process.l1tTrackerEmuHTMissExtended)
     process.pL1TrackTripletEmulator = cms.Path(process.l1tTrackTripletEmulation)
-    if(runDispVert):
-        process.DispVert = cms.Path(process.DisplacedVertexProducer)
     DISPLACED = 'Both'
 
 
@@ -285,9 +281,6 @@ process.L1TrackNtuple = cms.EDAnalyzer('L1TrackObjectNtupleMaker',
         GenParticleInputTag = cms.InputTag("genParticles",""),
         RecoVertexInputTag=cms.InputTag("l1tVertexFinder", "L1Vertices"),
         RecoVertexEmuInputTag=cms.InputTag("l1tVertexFinderEmulator", "L1VerticesEmulation"),
-        DisplacedVertexInputTag = cms.InputTag("DisplacedVertexProducer","dispVertices"),
-        DisplacedVertexEmulationInputTag = cms.InputTag("DisplacedVertexProducer","dispVerticesEmulation"),
-        runDispVert = cms.bool(runDispVert)
 )
 
 process.ntuple = cms.Path(process.L1TrackNtuple)
@@ -308,7 +301,4 @@ process.pOut = cms.EndPath(process.out)
 # use this if cluster/stub associators not available
 # process.schedule = cms.Schedule(process.TTClusterStubTruth,process.TTTracksEmuWithTruth,process.ntuple)
 
-process.schedule = cms.Schedule(process.TTClusterStub, process.TTClusterStubTruth, process.dtc, process.TTTracksEmuWithTruth, process.pL1GTTInput, process.pL1TrackSelection, process.pPV, process.pPVemu,process.pL1TrackVertexAssociation, process.pL1TrackJets, process.pL1TrackJetsEmu,process.pL1TrackFastJets, process.pTkMET, process.pTkMETEmu, process.pTkMHT, process.pTkMHTEmulator,process.pL1TrackTripletEmulator,process.ntuple)
-
-if(runDispVert):
-    process.schedule.append(process.DispVert)
+process.schedule = cms.Schedule(process.TTClusterStub, process.TTClusterStubTruth, process.dtc, process.TTTracksEmuWithTruth, process.pL1GTTInput, process.pL1TrackSelection, process.pPV, process.pPVemu,process.pL1TrackVertexAssociation, process.pL1TrackJets, process.pL1TrackJetsEmu,process.pL1TrackFastJets, process.pTkMET, process.pTkMETEmu, process.pTkMHT, process.pTkMHTEmulator,process.pL1TrackTripletEmulator, process.ntuple)

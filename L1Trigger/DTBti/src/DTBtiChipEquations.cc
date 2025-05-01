@@ -160,6 +160,8 @@ void DTBtiChip::computeEqs() {
     //patt 0 always uses Xbc, because Xad could be negative...
     //when wire B is missing,  TshiftB=0
     //when hit B is gone out of shift register, Tshift=K0+1
+    float _difs_p0 = _difs[5];
+
     float TshiftB = 0;
     float TshiftC = 0;
     if (_thisStepUsedHit[3 - 1] == nullptr) {
@@ -178,7 +180,7 @@ void DTBtiChip::computeEqs() {
     } else
       TshiftC = _thisStepUsedHit[2 - 1]->jtrig();
 
-    float _difs_p0 = (float)(TshiftB - TshiftC);
+    _difs_p0 = (float)(TshiftB - TshiftC);
 
     // Zotto's
     _XeqAB_patt0 = (_sums[1] - K0) / 4.;  //eq. AB

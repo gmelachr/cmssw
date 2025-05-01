@@ -64,6 +64,7 @@ else:
         record = cms.string('SiPixel2DTemplateDBObjectRcd'),
         tag = cms.string('SiPixel2DTemplateDBObject' + magfieldString + version)
         )),
+                              timetype = cms.string('runnumber'),
                               #when arguments used
                               #connect = cms.string('sqlite_file:siPixel2DTemplates' + magfieldString + version + '.db')
                               #when parameters hardcoded

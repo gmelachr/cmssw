@@ -39,6 +39,7 @@ cond::ImportUtilities::ImportUtilities() : Utilities("conddb_import") {
 cond::ImportUtilities::~ImportUtilities() {}
 
 int cond::ImportUtilities::execute() {
+  bool debug = hasDebug();
   std::string destConnect = getOptionValue<std::string>("connect");
   std::string sourceConnect = destConnect;
   if (hasOptionValue("fromConnect"))

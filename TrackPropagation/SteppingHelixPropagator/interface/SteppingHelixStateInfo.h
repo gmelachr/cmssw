@@ -36,8 +36,7 @@ public:
   static const std::string ResultName[MAX_RESULT];
 
   SteppingHelixStateInfo()
-      : q(0),
-        path_(0),
+      : path_(0),
         radPath_(0),
         dir(0),
         magVol(nullptr),

@@ -15,6 +15,7 @@ process.CondDB.connect = 'sqlite_file:../data/Summer16_V0_MC_MEtXY.db'
 
 process.PoolDBESSource = cms.ESSource("PoolDBESSource",
       process.CondDB,
+      timetype = cms.string('runnumber'),
       toGet = cms.VPSet(
       cms.PSet(
               record = cms.string('MEtXYcorrectRecord'),# plugin 

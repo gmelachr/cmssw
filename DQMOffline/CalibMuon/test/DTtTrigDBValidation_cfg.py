@@ -24,6 +24,7 @@ process.ttrigRef = cms.ESSource("PoolDBESSource",
         messageLevel = cms.untracked.int32(0),
         authenticationPath = cms.untracked.string('/afs/cern.ch/cms/DB/conddb')
     ),
+    timetype = cms.string('runnumber'),
     toGet = cms.VPSet(
         cms.PSet(
             record = cms.string('DTTtrigRcd'),
@@ -39,6 +40,7 @@ process.ttrigRef = cms.ESSource("PoolDBESSource",
         )),
     #connect = cms.string('CMSCONDVSTEMPLATE'),
     connect = cms.string(''),
+    siteLocalConfig = cms.untracked.bool(False)
 )
 
 process.MessageLogger = cms.Service("MessageLogger",

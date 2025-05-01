@@ -53,7 +53,7 @@ PhysicsCommissioningOutput
 ExpressCosmicsOutput
 CalibrationOutput
 EcalCalibrationOutput
-CosmicHLTMonitorOutput		      # CMSHLT-3439
+HLTMonitorOutput		      # CMSHLT-3364
 RPCMONOutput
 
 DQMOutput

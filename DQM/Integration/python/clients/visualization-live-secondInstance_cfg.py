@@ -129,6 +129,4 @@ if dump:
     psetFile.close()
     cmsRun = "cmsRun -e RunVisualizationProcessingCfg.py"
     print("Now do:\n%s" % cmsRun)
-
-print("Global Tag used:", process.GlobalTag.globaltag.value())
 print("Final Source settings:", process.source)

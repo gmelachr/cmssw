@@ -1,8 +1,8 @@
 import FWCore.ParameterSet.Config as cms
 import sys
 
-from Configuration.Eras.Era_Run3_2025_cff import Run3_2025
-process = cms.Process("CSCDQMLIVE", Run3_2025)
+from Configuration.Eras.Era_Run3_cff import Run3
+process = cms.Process("CSCDQMLIVE", Run3)
 
 #-------------------------------------------------
 # DQM Module Configuration
@@ -222,7 +222,6 @@ if (process.runType.getRunType() == process.runType.hi_run):
 
 ### process customizations included here
 from DQM.Integration.config.online_customizations_cfi import *
-process = customise(process)
-print("Global Tag used:", process.GlobalTag.globaltag.value())
 print("Final Source settings:", process.source)
+process = customise(process)
 

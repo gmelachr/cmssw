@@ -332,7 +332,8 @@ namespace edm {
 
     std::exception_ptr firstException;
     CMS_SA_ALLOW try {
-      schedule_->beginJob(*preg_, esp_->recordsToResolverIndices(), *processBlockHelper_, processContext_);
+      schedule_->beginJob(
+          *preg_, esp_->recordsToResolverIndices(), *processBlockHelper_, *pathsAndConsumesOfModules_, processContext_);
     } catch (...) {
       firstException = std::current_exception();
     }

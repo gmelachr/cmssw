@@ -103,7 +103,6 @@ protected:
 
 private:
   //  edm::ParameterSet conf_;
-  const bool isCosmics_;
   std::string topDirName_;
   double dRmin_;
   double pTCutForPlateau_;

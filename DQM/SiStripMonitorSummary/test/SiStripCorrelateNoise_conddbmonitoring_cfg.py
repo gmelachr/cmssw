@@ -55,10 +55,13 @@ process.load("Geometry.TrackerGeometryBuilder.trackerParameters_cfi")
 
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
 
-process.poolDBESSource = cms.ESSource("PoolDBESSource",
+process.poolDBESSource = cms.ESSource(
+                                      "PoolDBESSource",
+                                      BlobStreamerName = cms.untracked.string('TBufferBlobStreamingService'),
                                       DBParameters = cms.PSet(messageLevel = cms.untracked.int32(1), # it used to be 2
                                                               authenticationPath = cms.untracked.string('/afs/cern.ch/cms/DB/conddb')
                                                               ),
+                                      timetype = cms.untracked.string('runnumber'),
                                       connect = cms.string(options.connectionString),
                                       toGet = cms.VPSet(cms.PSet(record = cms.string('SiStripNoisesRcd'),
                                                                  tag = cms.string(options.noiseTagName)

@@ -10,8 +10,6 @@
 #include "RecoTracker/LSTCore/interface/TripletsSoA.h"
 #include "RecoTracker/LSTCore/interface/Circle.h"
 
-#include "NeuralNetwork.h"
-
 namespace ALPAKA_ACCELERATOR_NAMESPACE::lst {
 
   ALPAKA_FN_ACC ALPAKA_FN_INLINE void addTripletToMemory(ModulesConst modules,
@@ -698,11 +696,6 @@ namespace ALPAKA_ACCELERATOR_NAMESPACE::lst {
                                    betaIn,
                                    betaInCut,
                                    ptCut))
-      return false;
-
-    bool inference =
-        lst::t3dnn::runInference(acc, mds, firstMDIndex, secondMDIndex, thirdMDIndex, circleRadius, betaIn);
-    if (!inference)  // T3-building cut
       return false;
 
     return true;

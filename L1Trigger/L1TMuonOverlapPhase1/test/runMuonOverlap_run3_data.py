@@ -96,6 +96,7 @@ if loadConfigFrom_fakeOmtfParams :
           cms.PSet(record = cms.string('L1TMuonOverlapParamsRcd'),
                    data = cms.vstring('L1TMuonOverlapParams'))
                        ),
+       verbose = cms.untracked.bool(False)
     )
 
 
@@ -115,6 +116,7 @@ if loadConfigFrom_sqlite_file :
                           tag = cms.string('params') #check the tag name int the DB: sqlite3 l1config.db  ; select * from TAG;
                           )
        ),
+      verbose = cms.untracked.bool(False)
     )
     
     process.es_prefer_EcalTBWeights = cms.ESPrefer("PoolDBESSource", "PoolDBESSourceSqlite")

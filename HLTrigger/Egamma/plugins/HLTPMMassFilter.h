@@ -15,7 +15,6 @@
 #include "DataFormats/EgammaReco/interface/SuperCluster.h"
 #include "DataFormats/EgammaReco/interface/SuperClusterFwd.h"
 #include "DataFormats/HLTReco/interface/TriggerFilterObjectWithRefs.h"
-#include "DataFormats/Math/interface/deltaR.h"
 #include "DataFormats/Math/interface/Point3D.h"
 #include "DataFormats/RecoCandidate/interface/RecoEcalCandidate.h"
 #include "DataFormats/RecoCandidate/interface/RecoEcalCandidateFwd.h"
@@ -53,10 +52,6 @@ private:
   edm::EDGetTokenT<reco::BeamSpot> beamSpotToken_;
   double lowerMassCut_;
   double upperMassCut_;
-  double lowerdRCut_;
-  double upperdRCut_;
-  double lowerdR2Cut_;
-  double upperdR2Cut_;
   int nZcandcut_;  // number of Z candidates required
   bool reqOppCharge_;
 

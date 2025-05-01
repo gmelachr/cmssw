@@ -20,6 +20,7 @@ process.source = cms.Source("EmptyIOVSource",
 
 process.rn = cms.ESSource("PoolDBESSource",
     process.CondDBCommon,
+    timetype = cms.string('runnumber'),
     toGet = cms.VPSet(cms.PSet(
         record = cms.string('DQMSummaryRcd'),
         tag = cms.string('DQMSummaryTest')

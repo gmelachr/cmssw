@@ -77,6 +77,7 @@ namespace edm {
     void beginJob(ProductRegistry const&,
                   eventsetup::ESRecordsToProductResolverIndices const&,
                   ProcessBlockHelperBase const&,
+                  PathsAndConsumesOfModulesBase const&,
                   ProcessContext const&);
     void endJob(ExceptionCollector& collector);
 

@@ -63,6 +63,7 @@ process.CondDB.DBParameters.messageLevel = 2
 process.CondDB.DBParameters.authenticationPath = '/afs/cern.ch/cms/DB/conddb'
 process.PoolDBESSource = cms.ESSource("PoolDBESSource",
                                       process.CondDB,
+                                      BlobStreamerName = cms.untracked.string('TBufferBlobStreamingService'),
                                       toGet = cms.VPSet(#cms.PSet(record = cms.string('SiPixelGainCalibrationRcd'),
                                                         #         tag = cms.string('GainCalibTestFull')
                                                         #     ), 

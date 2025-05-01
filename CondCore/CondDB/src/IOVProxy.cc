@@ -1,12 +1,9 @@
 #include <memory>
 
 #include "CondCore/CondDB/interface/IOVProxy.h"
-#include "CondCore/CondDB/interface/Time.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include "SessionImpl.h"
 
-using cond::time::lumiIdToLumiNr;
-using cond::time::lumiIdToRun;
 namespace cond {
 
   namespace persistency {
@@ -128,7 +125,17 @@ namespace cond {
       size_t numberOfQueries = 0;
     };
 
+    IOVProxy::IOVProxy() : m_data(), m_session() {}
+
     IOVProxy::IOVProxy(const std::shared_ptr<SessionImpl>& session) : m_data(new IOVProxyData), m_session(session) {}
+
+    IOVProxy::IOVProxy(const IOVProxy& rhs) : m_data(rhs.m_data), m_session(rhs.m_session) {}
+
+    IOVProxy& IOVProxy::operator=(const IOVProxy& rhs) {
+      m_data = rhs.m_data;
+      m_session = rhs.m_session;
+      return *this;
+    }
 
     void IOVProxy::load(const std::string& tagName) {
       boost::posix_time::ptime notime;
@@ -286,47 +293,8 @@ namespace cond {
         throwException("The transaction is not active.", ctx);
     }
 
-    void printTagInfoAndRanges(edm::LogSystem& log,
-                               const IOVProxyData& iovProxyData,
-                               cond::Time_t lowerGroup,
-                               cond::Time_t higherGroup) {
-      log << "Fetched new IOV for '" << iovProxyData.tagInfo.name << "'\n"
-          << "payload type: " << iovProxyData.tagInfo.payloadType << "\n"
-          << "request interval [ " << lowerGroup << " , " << higherGroup << " ]\n"
-          << "new range [ " << iovProxyData.groupLowerIov << " , " << iovProxyData.groupHigherIov << " ]\n";
-      if (iovProxyData.tagInfo.timeType == cond::TimeType::lumiid) {
-        log << "request interval (run, LS): [ ("  // comments to override code-format
-            << lumiIdToRun(lowerGroup) << ", " << lumiIdToLumiNr(lowerGroup) << ") , ("  //
-            << lumiIdToRun(higherGroup) << ", " << lumiIdToLumiNr(higherGroup) << ") ]\n"
-            << "new range (run, LS): [ ("  //
-            << lumiIdToRun(iovProxyData.groupLowerIov) << ", " << lumiIdToLumiNr(iovProxyData.groupLowerIov) << ") , ("
-            << lumiIdToRun(iovProxyData.groupHigherIov) << ", " << lumiIdToLumiNr(iovProxyData.groupHigherIov)
-            << ") ]\n";
-      }
-    }
-
-    void printIovsAndHashesOfSequence(edm::LogSystem& log, const IOVProxyData& iovProxyData) {
-      const bool isLumiid = iovProxyData.tagInfo.timeType == cond::TimeType::lumiid;
-      log << "#entries " << iovProxyData.iovSequence.size() << "\n"
-          << "sequence [iov " << (isLumiid ? "(run, LS)" : "") << ", hash]:\n";
-      for (const auto& [iov, hash] : iovProxyData.iovSequence) {
-        log << iov << " ";
-        if (isLumiid) {
-          log << "(" << lumiIdToRun(iov) << ", " << lumiIdToLumiNr(iov) << ")";
-        }
-        log << ", " << hash << ",\n";
-      }
-    }
-
-    void printIOVSequenceDiagnostics(const IOVProxyData& iovProxyData,
-                                     cond::Time_t lowerGroup,
-                                     cond::Time_t higherGroup) {
-      edm::LogSystem log("NewIOV");  // creating here so everything is in one message
-      printTagInfoAndRanges(log, iovProxyData, lowerGroup, higherGroup);
-      printIovsAndHashesOfSequence(log, iovProxyData);
-    }
-
     void IOVProxy::fetchSequence(cond::Time_t lowerGroup, cond::Time_t higherGroup) {
+      bool firstTime = m_data->iovSequence.empty();
       m_data->iovSequence.clear();
       m_session->iovSchema().iovTable().select(
           m_data->tagInfo.name, lowerGroup, higherGroup, m_data->snapshotTime, m_data->iovSequence);
@@ -347,11 +315,13 @@ namespace cond {
           m_data->groupHigherIov = cond::time::MAX_VAL;
         }
       }
-      m_data->numberOfQueries++;
-
-      if (m_printDebug) {
-        printIOVSequenceDiagnostics(*m_data, lowerGroup, higherGroup);
+      if (not firstTime) {
+        edm::LogSystem("NewIOV") << "Fetched new IOV for '" << m_data->tagInfo.name << "' request interval [ "
+                                 << lowerGroup << " , " << higherGroup << " ] new range [ " << m_data->groupLowerIov
+                                 << " , " << m_data->groupHigherIov << " ] #entries " << m_data->iovSequence.size();
       }
+
+      m_data->numberOfQueries++;
     }
 
     cond::Iov_t IOVProxy::getInterval(cond::Time_t time) {

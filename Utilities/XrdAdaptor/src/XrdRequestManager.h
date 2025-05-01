@@ -41,11 +41,6 @@ namespace XrdAdaptor {
     uint16_t m_code;
   };
 
-  /**
-   * The RequestManager manages the requests concerning one PFN.
-   *
-   * It implements retries, and can use multiple Sources
-   */
   class RequestManager {
   public:
     using IOSize = edm::storage::IOSize;
@@ -223,13 +218,8 @@ namespace XrdAdaptor {
     std::vector<std::shared_ptr<Source>> m_activeSources;
     std::vector<std::shared_ptr<Source>> m_inactiveSources;
 
-    /// Contains the "DataServer" property for disabled Sources and
-    /// for connections for which the Open() call failed
     oneapi::tbb::concurrent_unordered_set<std::string> m_disabledSourceStrings;
-    /// Contains Source::determineExcludeString() for disabled Sources and
-    /// for connections for which the Open() call failed
     oneapi::tbb::concurrent_unordered_set<std::string> m_disabledExcludeStrings;
-    /// Sources that have been disabled
     oneapi::tbb::concurrent_unordered_set<std::shared_ptr<Source>, SourceHash> m_disabledSources;
 
     // StatisticsSenderService wants to know what our current server is;
@@ -270,10 +260,8 @@ namespace XrdAdaptor {
       ~OpenHandler() override;
 
       /**
-       * Handle the file-open response
-       *
-       * Called by XRootD
-       */
+         * Handle the file-open response
+         */
       void HandleResponseWithHosts(XrdCl::XRootDStatus *status,
                                    XrdCl::AnyObject *response,
                                    XrdCl::HostList *hostList) override;

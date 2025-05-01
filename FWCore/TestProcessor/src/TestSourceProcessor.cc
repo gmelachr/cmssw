@@ -224,12 +224,15 @@ namespace edm::test {
     //make the services available
     ServiceRegistry::Operate operate(serviceToken_);
 
-    auto oldCacheID = source_->productRegistry().cacheIdentifier();
     fb_ = source_->readFile();
     //incase the input's registry changed
-    if (oldCacheID != source_->productRegistry().cacheIdentifier()) {
-      preg_->merge(source_->productRegistry(), fb_ ? fb_->fileName() : std::string());
+    const size_t size = preg_->size();
+    preg_->merge(source_->productRegistry(), fb_ ? fb_->fileName() : std::string());
+    if (size < preg_->size()) {
+      principalCache_.adjustIndexesAfterProductRegistryAddition(preg_);
     }
+    principalCache_.adjustEventsToNewProductRegistry(preg_);
+
     source_->fillProcessBlockHelper();
     ProcessBlockPrincipal& processBlockPrincipal = principalCache_.inputProcessBlockPrincipal();
     while (source_->nextProcessBlock(processBlockPrincipal)) {
@@ -260,7 +263,6 @@ namespace edm::test {
 
     //NOTE: should probably handle merging as well
     runPrincipal_ = principalCache_.getAvailableRunPrincipalPtr();
-    runPrincipal_->possiblyUpdateAfterAddition(preg_);
     runPrincipal_->setAux(*source_->runAuxiliary());
     source_->readRun(*runPrincipal_, *historyAppender_);
 
@@ -278,7 +280,6 @@ namespace edm::test {
 
     lumiPrincipal_ = principalCache_.getAvailableLumiPrincipalPtr();
     assert(lumiPrincipal_);
-    lumiPrincipal_->possiblyUpdateAfterAddition(preg_);
     lumiPrincipal_->setAux(*source_->luminosityBlockAuxiliary());
     source_->readLuminosityBlock(*lumiPrincipal_, *historyAppender_);
 
@@ -294,7 +295,6 @@ namespace edm::test {
     ServiceRegistry::Operate operate(serviceToken_);
 
     auto& event = principalCache_.eventPrincipal(0);
-    event.possiblyUpdateAfterAddition(preg_);
     StreamContext streamContext(event.streamID(), &processContext_);
 
     source_->readEvent(event, streamContext);

@@ -3,6 +3,8 @@ import FWCore.ParameterSet.Config as cms
 process = cms.Process("TEST")
 
 process.PoolDBESSource = cms.ESSource("PoolDBESSource",
+    loadAll = cms.bool(True),
+    timetype = cms.string('runnumber'),
     toGet = cms.VPSet(
 ##### toGet BEGIN #####
 ##### toGet END #####

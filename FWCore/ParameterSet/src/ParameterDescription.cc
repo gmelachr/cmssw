@@ -10,7 +10,6 @@
 #include "FWCore/ParameterSet/src/FillDescriptionFromPSet.h"
 #include "FWCore/ParameterSet/interface/ParameterSetDescription.h"
 #include "FWCore/ParameterSet/interface/VParameterSetEntry.h"
-#include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include "FWCore/Utilities/interface/Algorithms.h"
 #include "FWCore/Utilities/interface/EDMException.h"
 #include "FWCore/Utilities/interface/InputTag.h"
@@ -44,7 +43,7 @@ namespace edm {
 
   void ParameterDescription<ParameterSetDescription>::validate_(ParameterSet& pset,
                                                                 std::set<std::string>& validatedLabels,
-                                                                Modifier modifier) const {
+                                                                bool optional) const {
     bool exists = pset.existsAs<ParameterSet>(label(), isTracked());
 
     if (exists) {
@@ -55,7 +54,7 @@ namespace edm {
       throwParameterWrongType();
     }
 
-    if (modifier == Modifier::kNone && !exists) {
+    if (!optional && !exists) {
       if (isTracked()) {
         pset.addParameter(label(), ParameterSet());
       } else {
@@ -67,10 +66,6 @@ namespace edm {
     exists = pset.existsAs<ParameterSet>(label(), isTracked());
 
     if (exists) {
-      if (modifier == Modifier::kObsolete) {
-        edm::LogWarning("Configuration") << "ignoring obsolete parameter '" << label() << "'";
-        return;
-      }
       if (pset.isRegistered()) {
         pset.invalidateRegistration("");
       }
@@ -201,7 +196,7 @@ namespace edm {
 
   void ParameterDescription<std::vector<ParameterSet> >::validate_(ParameterSet& pset,
                                                                    std::set<std::string>& validatedLabels,
-                                                                   Modifier modifier) const {
+                                                                   bool optional) const {
     bool exists = pset.existsAs<std::vector<ParameterSet> >(label(), isTracked());
 
     if (exists) {
@@ -212,7 +207,7 @@ namespace edm {
       throwParameterWrongType();
     }
 
-    if (!exists && modifier == Modifier::kNone) {
+    if (!exists && !optional) {
       if (hasDefault()) {
         if (isTracked()) {
           pset.addParameter(label(), vPset_);
@@ -227,10 +222,6 @@ namespace edm {
 
     exists = pset.existsAs<std::vector<ParameterSet> >(label(), isTracked());
     if (exists) {
-      if (modifier == Modifier::kObsolete) {
-        edm::LogWarning("Configuration") << "ignoring obsolete parameter '" << label() << "'";
-        return;
-      }
       VParameterSetEntry* vpsetEntry = pset.getPSetVectorForUpdate(label());
       assert(vpsetEntry);
 
